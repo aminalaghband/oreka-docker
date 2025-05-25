@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  oreka:
+    build: .
+    ports:
+      - "5060:5060/udp"
+      - "5060:5060/tcp"
+      - "8080:8080"
+    volumes:
+      - ./config:/etc/orkaudio
+      - ./recordings:/var/spool/orkaudio
+    environment:
+      SIP_USER: ${SIP_TRUNK_USER}
+      SIP_PASSWORD: ${SIP_TRUNK_PASSWORD}
+      SIP_TERMINATION_URI: ${TERMINATION_URI}
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: oreka-root
+      MYSQL_DATABASE: oreka
+      MYSQL_USER: oreka
+      MYSQL_PASSWORD: oreka-pass
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
