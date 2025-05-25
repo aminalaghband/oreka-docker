@@ -7,11 +7,15 @@ RUN apt-get update && \
     openjdk-11-jdk \
     maven \
     git \
-    tcpdump
+    tcpdump \
+    autoconf \
+    automake \
+    libtool
 
 # Build Oreka
 RUN git clone https://github.com/voiceip/oreka.git && \
     cd oreka/orkaudio && \
+    ./autogen.sh && \
     ./configure --with-java=/usr/lib/jvm/java-11-openjdk-amd64 && \
     make && \
     make install
